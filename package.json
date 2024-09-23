@@ -1,0 +1,33 @@
+{
+  "name": "vite-plugin-typescript-path-aliases",
+  "description": "Simple vite plugin to generate typescript path mapping based on vite aliases",
+  "author": "alysonmota",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "out/plugin.js",
+  "types": "out/plugin.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alysonmota/vite-plugin-typescript-path-mapping.git"
+  },
+  "homepage": "https://github.com/alysonmota/vite-plugin-typescript-path-mapping",
+  "scripts": {
+    "build": "tsup",
+    "lint:check": "@biomejs/biome check",
+    "lint:format": "@biomejs/biome check --write --unsafe",
+    "release": "pnpm run build && pnpm publish"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3",
+    "@types/node": "^22.5.5",
+    "tsup": "8.3.0",
+    "typescript": "5.6.2",
+    "vite": "5.4.7"
+  },
+  "files": [
+    "out",
+    "paths.json"
+  ],
+  "private": false,
+  "packageManager": "pnpm@9.9.0"
+}
