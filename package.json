@@ -2,7 +2,7 @@
   "name": "vite-plugin-typescript-path-aliases",
   "description": "Simple vite plugin to generate typescript path mapping based on vite aliases",
   "author": "alysonmota",
-  "version": "0.0.0",
+  "version": "0.0.3",
   "type": "module",
   "main": "out/plugin.js",
   "types": "out/plugin.d.ts",

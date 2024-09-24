@@ -1,5 +1,5 @@
 import { writeFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { isAbsolute, join } from 'node:path'
 
 import type {
 	Alias,
@@ -16,9 +16,18 @@ type ResolveOptionsWithAlias = ResolveOptions & {
 
 type Paths = Record<string, Array<string>>
 
-const AliasSuffix = String.fromCharCode(0x2f).concat(String.fromCharCode(0x2a))
+const Slash = String.fromCharCode(0x2f)
+const AliasSuffix = Slash.concat(String.fromCharCode(0x2a))
+const Dot = String.fromCharCode(0x2e)
+const RelativePrefix = Dot.concat(Slash)
 
 let userAlias: AliasOptions | undefined
+
+function formatRelativePath(path: string): string {
+	if (path.startsWith(RelativePrefix)) return path
+	if (path.startsWith(Slash)) return Dot.concat(path)
+	return RelativePrefix.concat(path)
+}
 
 export function typescriptPathAliases(): PluginOption {
 	return {
@@ -32,13 +41,20 @@ export function typescriptPathAliases(): PluginOption {
 				for (const map of userAlias as Readonly<Array<Alias>>) {
 					const { find, replacement } = map
 					if (find instanceof RegExp) continue
+					const _isAbsolute = isAbsolute(replacement)
+					const alias = formatRelativePath(
+						_isAbsolute ? replacement.replace(root, String()) : replacement,
+					)
 					paths[find.concat(AliasSuffix)] = new Array<string>(
-						replacement.concat(AliasSuffix),
+						alias.concat(AliasSuffix),
 					)
 				}
 				writeFileSync(
-					join(root, 'paths.json'),
-					JSON.stringify({ compilerOptions: { paths } }),
+					join(
+						root,
+						'node_modules/vite-plugin-typescript-path-aliases/paths.json',
+					),
+					JSON.stringify({ compilerOptions: { baseUrl: root, paths } }),
 				)
 			}
 		},
